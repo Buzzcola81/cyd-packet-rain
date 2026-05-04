@@ -33,15 +33,22 @@ jobs:
       - name: Prepare release binaries
         run: |
           TAG="${{ steps.version.outputs.tag }}"
-          cp .pio/build/cyd/bootloader.bin    "bootloader-${TAG}.bin"
-          cp .pio/build/cyd/partitions.bin    "partitions-${TAG}.bin"
-          cp .pio/build/cyd/firmware.bin      "firmware-${TAG}.bin"
+          BOOT_APP0=$(find ~/.platformio/packages/framework-arduinoespressif32 -name boot_app0.bin | head -1)
+          python -m esptool --chip esp32 merge_bin \
+            --output "cyd-packet-rain-${TAG}.bin" \
+            --flash_mode dio \
+            --flash_freq 40m \
+            --flash_size 4MB \
+            0x1000  .pio/build/cyd/bootloader.bin \
+            0x8000  .pio/build/cyd/partitions.bin \
+            0xe000  "$BOOT_APP0" \
+            0x10000 .pio/build/cyd/firmware.bin
 
       - name: Update manifest.json for GitHub Pages
         run: |
           TAG="${{ steps.version.outputs.tag }}"
           REPO="${{ github.repository }}"
-          BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
+          BIN_URL="https://github.com/${REPO}/releases/download/${TAG}/cyd-packet-rain-${TAG}.bin"
           cat > docs/manifest.json <<EOF
           {
             "name": "CYD Packet Rain",
@@ -52,16 +59,8 @@ jobs:
                 "chipFamily": "ESP32",
                 "parts": [
                   {
-                    "path": "${BASE_URL}/bootloader-${TAG}.bin",
-                    "offset": 4096
-                  },
-                  {
-                    "path": "${BASE_URL}/partitions-${TAG}.bin",
-                    "offset": 32768
-                  },
-                  {
-                    "path": "${BASE_URL}/firmware-${TAG}.bin",
-                    "offset": 65536
+                    "path": "${BIN_URL}",
+                    "offset": 0
                   }
                 ]
               }
@@ -82,8 +81,5 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            bootloader-${{ steps.version.outputs.tag }}.bin
-            partitions-${{ steps.version.outputs.tag }}.bin
-            firmware-${{ steps.version.outputs.tag }}.bin
+          files: cyd-packet-rain-${{ steps.version.outputs.tag }}.bin
           generate_release_notes: true
