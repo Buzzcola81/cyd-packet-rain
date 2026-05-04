@@ -44,11 +44,10 @@ jobs:
             0xe000  "$BOOT_APP0" \
             0x10000 .pio/build/cyd/firmware.bin
 
-      - name: Update manifest.json for GitHub Pages
+      - name: Update docs for GitHub Pages
         run: |
           TAG="${{ steps.version.outputs.tag }}"
-          REPO="${{ github.repository }}"
-          BIN_URL="https://github.com/${REPO}/releases/download/${TAG}/cyd-packet-rain-${TAG}.bin"
+          cp "cyd-packet-rain-${TAG}.bin" docs/firmware.bin
           cat > docs/manifest.json <<EOF
           {
             "name": "CYD Packet Rain",
@@ -59,7 +58,7 @@ jobs:
                 "chipFamily": "ESP32",
                 "parts": [
                   {
-                    "path": "${BIN_URL}",
+                    "path": "firmware.bin",
                     "offset": 0
                   }
                 ]
@@ -68,14 +67,14 @@ jobs:
           }
           EOF
 
-      - name: Commit updated manifest
+      - name: Commit updated docs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           git checkout main
-          git add docs/manifest.json
-          git diff --cached --quiet || git commit -m "Update manifest for ${{ steps.version.outputs.tag }}"
+          git add docs/manifest.json docs/firmware.bin
+          git diff --cached --quiet || git commit -m "Update firmware for ${{ steps.version.outputs.tag }}"
           git push
 
       - name: Create GitHub Release
