@@ -1,13 +1,13 @@
 {
   "name": "CYD Packet Rain",
-  "version": "v0.0.5",
+  "version": "v0.0.6",
   "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "https://github.com/Buzzcola81/cyd-packet-rain/releases/download/v0.0.5/cyd-packet-rain-v0.0.5.bin",
+          "path": "firmware.bin",
           "offset": 0
         }
       ]
