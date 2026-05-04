@@ -73,6 +73,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
           git checkout main
           git add docs/manifest.json
           git diff --cached --quiet || git commit -m "Update manifest for ${{ steps.version.outputs.tag }}"
