@@ -1,7 +1,6 @@
 {
     "name": "CYD Packet Rain",
     "version": "",
-    "home_assistant_domain": "",
     "new_install_prompt_erase": true,
     "builds": [
         {
@@ -9,7 +8,15 @@
             "parts": [
                 {
                     "path": "",
-                    "offset": 0
+                    "offset": 4096
+                },
+                {
+                    "path": "",
+                    "offset": 32768
+                },
+                {
+                    "path": "",
+                    "offset": 65536
                 }
             ]
         }
