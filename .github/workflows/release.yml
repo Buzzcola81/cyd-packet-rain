@@ -1,0 +1,74 @@
+name: Build and Release Firmware
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build firmware
+        run: pio run -e cyd
+
+      - name: Get version from tag
+        id: version
+        run: echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare release binary
+        run: |
+          cp .pio/build/cyd/firmware.bin cyd-packet-rain-${{ steps.version.outputs.tag }}.bin
+
+      - name: Update manifest.json for GitHub Pages
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          REPO="${{ github.repository }}"
+          BIN_URL="https://github.com/${REPO}/releases/download/${TAG}/cyd-packet-rain-${TAG}.bin"
+          cat > docs/manifest.json <<EOF
+          {
+            "name": "CYD Packet Rain",
+            "version": "${TAG}",
+            "new_install_prompt_erase": true,
+            "builds": [
+              {
+                "chipFamily": "ESP32",
+                "parts": [
+                  {
+                    "path": "${BIN_URL}",
+                    "offset": 0
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
+      - name: Commit updated manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git add docs/manifest.json
+          git diff --cached --quiet || git commit -m "Update manifest for ${{ steps.version.outputs.tag }}"
+          git push
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: cyd-packet-rain-${{ steps.version.outputs.tag }}.bin
+          generate_release_notes: true

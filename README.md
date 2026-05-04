@@ -4,6 +4,16 @@ A multi-screen LVGL UI for the CYD ESP32-2432S028 (Cheap Yellow Display) that co
 
 ---
 
+## Web Flasher
+
+Flash your CYD directly from the browser — no build tools required:
+
+**[Open Web Flasher](https://buzzcola81.github.io/cyd-packet-rain/)**
+
+Requires Chrome or Edge on desktop with the board connected via USB.
+
+---
+
 ## Features
 
 - VPN dashboard: status badge, VPN/public IP, geo-location, RX/TX, uptime, enable/disable toggle (OpenWrt ubus JSON-RPC)
