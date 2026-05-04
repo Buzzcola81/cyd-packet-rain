@@ -1,24 +1,24 @@
 {
-    "name": "CYD Packet Rain",
-    "version": "",
-    "new_install_prompt_erase": true,
-    "builds": [
+  "name": "CYD Packet Rain",
+  "version": "v0.0.3",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
         {
-            "chipFamily": "ESP32",
-            "parts": [
-                {
-                    "path": "",
-                    "offset": 4096
-                },
-                {
-                    "path": "",
-                    "offset": 32768
-                },
-                {
-                    "path": "",
-                    "offset": 65536
-                }
-            ]
+          "path": "https://github.com/Buzzcola81/cyd-packet-rain/releases/download/v0.0.3/bootloader-v0.0.3.bin",
+          "offset": 4096
+        },
+        {
+          "path": "https://github.com/Buzzcola81/cyd-packet-rain/releases/download/v0.0.3/partitions-v0.0.3.bin",
+          "offset": 32768
+        },
+        {
+          "path": "https://github.com/Buzzcola81/cyd-packet-rain/releases/download/v0.0.3/firmware-v0.0.3.bin",
+          "offset": 65536
         }
-    ]
+      ]
+    }
+  ]
 }
