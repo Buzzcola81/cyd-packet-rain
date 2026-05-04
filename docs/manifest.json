@@ -1,17 +1,17 @@
 {
-  "name": "CYD Packet Rain",
-  "version": "",
-  "home_assistant_domain": "",
-  "new_install_prompt_erase": true,
-  "builds": [
-    {
-      "chipFamily": "ESP32",
-      "parts": [
+    "name": "CYD Packet Rain",
+    "version": "",
+    "home_assistant_domain": "",
+    "new_install_prompt_erase": true,
+    "builds": [
         {
-          "path": "",
-          "offset": 0
+            "chipFamily": "ESP32",
+            "parts": [
+                {
+                    "path": "",
+                    "offset": 0
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
