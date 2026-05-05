@@ -37,6 +37,12 @@
         .subtitle {
             color: #888;
             font-size: 0.9rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .version {
+            color: #80ffa0;
+            font-size: 0.9rem;
             margin-bottom: 2rem;
         }
 
@@ -144,6 +150,7 @@
 <body>
     <h1>CYD Packet Rain</h1>
     <p class="subtitle">ESP32-2432S028 Web Flasher</p>
+    <p class="version">Version: <span id="firmwareVersion">Loading...</span></p>
 
     <div class="unsupported" id="unsupported">
         Your browser does not support Web Serial.<br />
@@ -208,6 +215,23 @@
         if (!("serial" in navigator)) {
             document.getElementById("unsupported").style.display = "block";
         }
+
+        async function loadFirmwareVersion() {
+            const versionEl = document.getElementById("firmwareVersion");
+            try {
+                const response = await fetch("manifest.json", { cache: "no-store" });
+                if (!response.ok) {
+                    throw new Error("Failed to load manifest");
+                }
+                const manifest = await response.json();
+                const version = manifest && manifest.version ? manifest.version : "Unknown";
+                versionEl.textContent = version;
+            } catch (error) {
+                versionEl.textContent = "Unavailable";
+            }
+        }
+
+        loadFirmwareVersion();
     </script>
 </body>
 
