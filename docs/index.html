@@ -132,6 +132,11 @@
             max-width: 560px;
             width: 100%;
         }
+
+        .card p {
+            margin: 0;
+            line-height: 1.5;
+        }
     </style>
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
 </head>
@@ -148,7 +153,7 @@
     <div class="card">
         <h2>Prerequisites</h2>
         <ol class="steps">
-            <li>Use <strong>Chrome</strong> or <strong>Edge</strong> on a desktop computer.</li>
+            <li>Use <strong>Chrome</strong> or <strong>Edge</strong> on a Windows computer.</li>
             <li>Install the <a href="https://www.wch-ic.com/downloads/CH341SER_EXE.html">CH340 USB driver</a> if needed.
             </li>
             <li>Connect your CYD board via USB.</li>
@@ -167,20 +172,32 @@
                     Web Serial is not allowed in this context.
                 </span>
             </esp-web-install-button>
-            <p class="note">
-                This will flash the latest release firmware to your board.
-                After flashing, connect to the board's web admin on port 80 to configure WiFi and other settings.
-            </p>
         </div>
     </div>
 
     <div class="card">
         <h2>After Flashing</h2>
         <ol class="steps">
-            <li>The board will create a WiFi access point or connect to your configured network.</li>
-            <li>Open the board's IP address in a browser to access the web admin.</li>
-            <li>Configure WiFi, OpenWrt, and OpenWeatherMap settings.</li>
+            <li>Connect to WiFi by using the device's setup menu.</li>
+            <li>Open the board's IP address in a browser to access the web admin. (IP available in the System menu)</li>
+            <li>Configure OpenWrt (Optional) for VPN management, and OpenWeatherMap settings (Optional).</li>
         </ol>
+    </div>
+
+    <div class="card">
+        <h2>More Documentation</h2>
+        <p class="note">
+            For more setup instructions and detailed documentation, visit the <a
+                href="https://github.com/buzzcola81/cyd-packet-rain/blob/main/README.md">README</a> on GitHub.
+        </p>
+    </div>
+
+    <div class="card" style="border-color: #ff5555; background: rgba(255, 85, 85, 0.1);">
+        <h2 style="color: #ff5555;">⚠️ Disclaimer</h2>
+        <p class="note" style="color: #ccc; font-size: 0.75rem;">
+            This is a personal project and has only been tested with the CYD ESP32-2432S028. It has not been tested
+            against any other boards. Use at your own risk.
+        </p>
     </div>
 
     <footer>
