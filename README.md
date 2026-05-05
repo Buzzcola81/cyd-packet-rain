@@ -263,6 +263,41 @@ Then reboot/reset CYD and run Test Connection again.
 
 ---
 
+## 9. Tag/Release Process
+
+1. Work in feature branch.
+2. Open PR to main.
+3. Merge PR after CI passes.
+4. Bump version in changelog or release notes.
+	- Add a short summary of user-facing changes, fixes, and any known issues for the new version.
+	- If you maintain a changelog file, you can commit it with:
+
+```bash
+git add README.md
+git commit -m "docs: update release notes for vX.Y.Z"
+git push
+```
+
+5. Create tag `vX.Y.Z` and push tag.
+	- Example:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+	- Or create an annotated tag:
+
+```bash
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
+```
+
+6. Release workflow publishes firmware and updates flasher manifest.
+7. Validate by opening the web flasher page and confirming installed version.
+
+---
+
 ## License
 
 MIT License
