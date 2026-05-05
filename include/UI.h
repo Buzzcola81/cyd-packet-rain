@@ -51,6 +51,7 @@ private:
 
     void updateClockScreen();
     void updateSysInfoScreen();
+    void applyClockTextSize();
     void fetchAndShowWeather();
 
     static void onToggleClicked(lv_event_t *e);
@@ -77,6 +78,7 @@ private:
     static void onBrightnessSliderChanged(lv_event_t *e);
     static void onLedBrightnessSliderChanged(lv_event_t *e);
     static void onLedSpeedSliderChanged(lv_event_t *e);
+    static void onClockSizeSliderChanged(lv_event_t *e);
     static void onScreensaverSwitchChanged(lv_event_t *e);
     static void onScreensaverTargetChanged(lv_event_t *e);
     static void onScreensaverDelayChanged(lv_event_t *e);
@@ -176,6 +178,8 @@ private:
     lv_obj_t *_lblLedBrightnessVal = nullptr;
     lv_obj_t *_ledSpeedSlider = nullptr;
     lv_obj_t *_lblLedSpeedVal = nullptr;
+    lv_obj_t *_clockSizeSlider = nullptr;
+    lv_obj_t *_lblClockSizeVal = nullptr;
     lv_obj_t *_screensaverSwitch = nullptr;
     lv_obj_t *_screensaverTargetDropdown = nullptr;
     lv_obj_t *_screensaverDelayDropdown = nullptr;

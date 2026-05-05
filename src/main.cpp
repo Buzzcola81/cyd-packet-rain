@@ -24,6 +24,7 @@ static bool screensaverEnabled = false;
 static uint8_t screensaverTarget = UI::SCREENSAVER_MATRIX;
 static unsigned long screensaverDelayMs = 30000UL;
 static bool screensaverRunning = false;
+static uint8_t clockTextSizeIdx = 2; // 0=Small(32), 1=Medium(40), 2=Large(48), 3=ExtraLarge(56)
 static RgbLed led;
 
 static uint16_t ledSpeedPctToPeriodMs(uint8_t speedPct)
@@ -112,6 +113,18 @@ void setScreensaverDelayMs(unsigned long delayMs)
 }
 
 unsigned long getScreensaverDelayMs() { return screensaverDelayMs; }
+
+void setClockTextSizeIdx(uint8_t idx)
+{
+    if (idx > 3)
+        idx = 3;
+    clockTextSizeIdx = idx;
+    prefs.begin("ui", false);
+    prefs.putUChar("clk_size", idx);
+    prefs.end();
+}
+
+uint8_t getClockTextSizeIdx() { return clockTextSizeIdx; }
 
 // ===== Display & Touch hardware =====
 #define XPT2046_IRQ 36
@@ -341,6 +354,9 @@ void setup()
     if (screensaverDelayMs != 30000UL && screensaverDelayMs != 60000UL &&
         screensaverDelayMs != 120000UL && screensaverDelayMs != 300000UL)
         screensaverDelayMs = 30000UL;
+    clockTextSizeIdx = prefs.getUChar("clk_size", 2);
+    if (clockTextSizeIdx > 3)
+        clockTextSizeIdx = 2;
     prefs.end();
     led.setMaxBrightnessPct(currentLedMaxBrightnessPct);
     led.setBreathPeriodMs(ledSpeedPctToPeriodMs(currentLedBreathSpeedPct));

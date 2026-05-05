@@ -23,6 +23,8 @@ extern void setScreensaverTarget(uint8_t target);
 extern uint8_t getScreensaverTarget();
 extern void setScreensaverDelayMs(unsigned long delayMs);
 extern unsigned long getScreensaverDelayMs();
+extern void setClockTextSizeIdx(uint8_t idx);
+extern uint8_t getClockTextSizeIdx();
 
 UI::UI(OpenWrtClient *client, const char *vpnInterface, VpnStatus *status)
     : _client(client), _vpnInterface(vpnInterface), _status(status) {}
@@ -719,14 +721,33 @@ void UI::buildClockScreen()
     lv_obj_add_flag(_scrClock, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(_scrClock, onPassiveScreenTouched, LV_EVENT_CLICKED, this);
 
+    // Clock font size mapping: 0=Small(20), 1=Medium(28), 2=Large(40), 3=ExtraLarge(48)
+    const lv_font_t *clockFonts[] = {
+        &lv_font_montserrat_20, // Small
+        &lv_font_montserrat_28, // Medium
+        &lv_font_montserrat_40, // Large
+        &lv_font_montserrat_48  // ExtraLarge
+    };
+    const lv_font_t *dateFonts[] = {
+        &lv_font_montserrat_12, // Small
+        &lv_font_montserrat_14, // Medium
+        &lv_font_montserrat_20, // Large
+        &lv_font_montserrat_24  // ExtraLarge
+    };
+    uint8_t sizeIdx = getClockTextSizeIdx();
+    if (sizeIdx > 3)
+        sizeIdx = 2;
+    const lv_font_t *selectedClockFont = clockFonts[sizeIdx];
+    const lv_font_t *selectedDateFont = dateFonts[sizeIdx];
+
     _lblClockTime = lv_label_create(_scrClock);
-    lv_obj_set_style_text_font(_lblClockTime, &lv_font_montserrat_48, 0);
+    lv_obj_set_style_text_font(_lblClockTime, selectedClockFont, 0);
     lv_obj_set_style_text_color(_lblClockTime, lv_color_hex(0x00FF66), 0);
     lv_label_set_text(_lblClockTime, "--:--:--");
     lv_obj_align(_lblClockTime, LV_ALIGN_CENTER, 0, -30);
 
     _lblClockDate = lv_label_create(_scrClock);
-    lv_obj_set_style_text_font(_lblClockDate, &lv_font_montserrat_24, 0);
+    lv_obj_set_style_text_font(_lblClockDate, selectedDateFont, 0);
     lv_obj_set_style_text_color(_lblClockDate, lv_color_hex(0x40FF80), 0);
     lv_label_set_text(_lblClockDate, "Synchronizing...");
     lv_obj_align(_lblClockDate, LV_ALIGN_CENTER, 0, 30);
@@ -766,6 +787,28 @@ void UI::updateClockScreen()
     lv_label_set_text(_lblClockDate, dbuf);
 }
 
+void UI::applyClockTextSize()
+{
+    // Update clock time and date fonts based on current setting
+    const lv_font_t *clockFonts[] = {
+        &lv_font_montserrat_20, // Small
+        &lv_font_montserrat_28, // Medium
+        &lv_font_montserrat_40, // Large
+        &lv_font_montserrat_48  // ExtraLarge
+    };
+    const lv_font_t *dateFonts[] = {
+        &lv_font_montserrat_12, // Small
+        &lv_font_montserrat_14, // Medium
+        &lv_font_montserrat_20, // Large
+        &lv_font_montserrat_24  // ExtraLarge
+    };
+    uint8_t sizeIdx = getClockTextSizeIdx();
+    if (sizeIdx > 3)
+        sizeIdx = 2;
+    lv_obj_set_style_text_font(_lblClockTime, clockFonts[sizeIdx], 0);
+    lv_obj_set_style_text_font(_lblClockDate, dateFonts[sizeIdx], 0);
+}
+
 void UI::loadClockScreenAsync(void *user_data)
 {
     UI *self = static_cast<UI *>(user_data);
@@ -776,6 +819,7 @@ void UI::loadClockScreenAsync(void *user_data)
         lv_indev_reset(indev, NULL);
         lv_indev_wait_release(indev);
     }
+    self->applyClockTextSize();
     self->updateClockScreen();
     lv_scr_load(self->_scrClock);
     if (self->_clockTimer == nullptr)
@@ -1360,7 +1404,7 @@ void UI::buildOptionsScreen()
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 8);
 
     lv_obj_t *cardDisplay = lv_obj_create(_scrOptions);
-    lv_obj_set_size(cardDisplay, 304, 176);
+    lv_obj_set_size(cardDisplay, 304, 218);
     lv_obj_align(cardDisplay, LV_ALIGN_TOP_MID, 0, 48);
     lv_obj_set_style_bg_color(cardDisplay, lv_color_hex(0x041808), 0);
     lv_obj_set_style_border_color(cardDisplay, lv_color_hex(0x00B040), 0);
@@ -1440,9 +1484,31 @@ void UI::buildOptionsScreen()
     lv_obj_set_style_bg_color(_ledSpeedSlider, lv_color_hex(0x80FFA0), LV_PART_KNOB);
     lv_obj_add_event_cb(_ledSpeedSlider, onLedSpeedSliderChanged, LV_EVENT_VALUE_CHANGED, this);
 
+    lv_obj_t *lblClockSize = lv_label_create(cardDisplay);
+    lv_label_set_text(lblClockSize, "Clock Text Size");
+    lv_obj_set_style_text_color(lblClockSize, lv_color_hex(0x40FF80), 0);
+    lv_obj_set_style_text_font(lblClockSize, &lv_font_montserrat_12, 0);
+    lv_obj_align(lblClockSize, LV_ALIGN_TOP_LEFT, 10, 156);
+
+    _lblClockSizeVal = lv_label_create(cardDisplay);
+    lv_obj_set_style_text_color(_lblClockSizeVal, lv_color_hex(0x80FFA0), 0);
+    lv_obj_set_style_text_font(_lblClockSizeVal, &lv_font_montserrat_14, 0);
+    lv_label_set_text(_lblClockSizeVal, "Large");
+    lv_obj_align(_lblClockSizeVal, LV_ALIGN_TOP_RIGHT, -10, 154);
+
+    _clockSizeSlider = lv_slider_create(cardDisplay);
+    lv_obj_set_size(_clockSizeSlider, 280, 14);
+    lv_obj_align(_clockSizeSlider, LV_ALIGN_TOP_MID, 0, 178);
+    lv_slider_set_range(_clockSizeSlider, 0, 3);
+    lv_slider_set_value(_clockSizeSlider, getClockTextSizeIdx(), LV_ANIM_OFF);
+    lv_obj_set_style_bg_color(_clockSizeSlider, lv_color_hex(0x062612), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(_clockSizeSlider, lv_color_hex(0x00FF66), LV_PART_INDICATOR);
+    lv_obj_set_style_bg_color(_clockSizeSlider, lv_color_hex(0x80FFA0), LV_PART_KNOB);
+    lv_obj_add_event_cb(_clockSizeSlider, onClockSizeSliderChanged, LV_EVENT_VALUE_CHANGED, this);
+
     lv_obj_t *cardScreensaver = lv_obj_create(_scrOptions);
     lv_obj_set_size(cardScreensaver, 304, 186);
-    lv_obj_align(cardScreensaver, LV_ALIGN_TOP_MID, 0, 232);
+    lv_obj_align(cardScreensaver, LV_ALIGN_TOP_MID, 0, 274);
     lv_obj_set_style_bg_color(cardScreensaver, lv_color_hex(0x041808), 0);
     lv_obj_set_style_border_color(cardScreensaver, lv_color_hex(0x00B040), 0);
     lv_obj_set_style_border_width(cardScreensaver, 1, 0);
@@ -1590,6 +1656,18 @@ void UI::onLedSpeedSliderChanged(lv_event_t *e)
     lv_label_set_text(self->_lblLedSpeedVal, buf);
 }
 
+void UI::onClockSizeSliderChanged(lv_event_t *e)
+{
+    UI *self = static_cast<UI *>(lv_event_get_user_data(e));
+    int idx = lv_slider_get_value(self->_clockSizeSlider);
+    setClockTextSizeIdx((uint8_t)idx);
+    const char *labels[] = {"Small", "Medium", "Large", "ExtraLarge"};
+    if (idx >= 0 && idx <= 3)
+    {
+        lv_label_set_text(self->_lblClockSizeVal, labels[idx]);
+    }
+}
+
 void UI::onScreensaverSwitchChanged(lv_event_t *e)
 {
     UI *self = static_cast<UI *>(lv_event_get_user_data(e));
@@ -1676,6 +1754,12 @@ void UI::loadOptionsScreenAsync(void *user_data)
         snprintf(buf, sizeof(buf), "%d%%", getLedBreathSpeedPct());
         lv_label_set_text(self->_lblLedSpeedVal, buf);
     }
+
+    lv_slider_set_value(self->_clockSizeSlider, getClockTextSizeIdx(), LV_ANIM_OFF);
+    const char *sizeLabels[] = {"Small", "Medium", "Large", "ExtraLarge"};
+    uint8_t sizeIdx = getClockTextSizeIdx();
+    if (sizeIdx <= 3)
+        lv_label_set_text(self->_lblClockSizeVal, sizeLabels[sizeIdx]);
 
     if (getScreensaverEnabled())
     {
