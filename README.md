@@ -1,5 +1,8 @@
 # CYD Packet Rain
 
+[![Build and Release Firmware](https://img.shields.io/github/actions/workflow/status/Buzzcola81/cyd-packet-rain/release.yml?label=Build%20and%20Release%20Firmware&logo=github&logoColor=white&style=flat)](https://github.com/Buzzcola81/cyd-packet-rain/actions/workflows/release.yml)
+[![Build and Release Web Flasher Page](https://img.shields.io/github/actions/workflow/status/Buzzcola81/cyd-packet-rain/pages/pages-build-deployment?label=Build%20and%20Release%20Web%20Flasher%20Page&logo=github&logoColor=white&style=flat)](https://github.com/Buzzcola81/cyd-packet-rain/actions/workflows/pages/pages-build-deployment)
+
 A multi-screen LVGL UI for the CYD ESP32-2432S028 (Cheap Yellow Display) that controls an OpenWrt router, monitors a WireGuard VPN, shows time and weather, and includes a built-in web admin so you can change credentials without reflashing.
 
 ---
