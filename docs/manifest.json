@@ -1,6 +1,6 @@
 {
   "name": "CYD Packet Rain",
-  "version": "v0.0.6",
+  "version": "v0.0.7",
   "new_install_prompt_erase": true,
   "builds": [
     {
