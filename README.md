@@ -17,11 +17,12 @@ Requires Chrome or Edge on desktop with the board connected via USB.
 ## Features
 
 - VPN dashboard: status badge, VPN/public IP, geo-location, RX/TX, uptime, enable/disable toggle (OpenWrt ubus JSON-RPC)
-- NTP clock: large time and date, Melbourne timezone by default (configurable POSIX TZ)
+- NTP clock: resizable time/date text (Small/Medium/Large/Extra Large), Melbourne timezone by default (configurable POSIX TZ)
 - Weather: current conditions plus 12-hour forecast (4 x 3-hour blocks) from OpenWeatherMap, auto-refresh every 5 minutes
 - System info: uptime, heap, PSRAM, WiFi RSSI, IP/MAC, web admin URL
 - Matrix screensaver: direct TFT_eSPI rain animation (32 x 24 cells) bypassing LVGL for smooth performance
-- Options: display brightness plus LED max brightness and breathing speed controls (persisted)
+- Screensaver controls: enable/disable, target screen (Clock/Weather/Matrix), and start delay (30s/1m/2m/5m), all persisted
+- Options: display brightness, clock text size, LED max brightness, and LED breathing speed controls (persisted)
 - Web admin: built-in HTTP server on port 80 to edit WiFi/OpenWrt/OWM settings without reflashing
 - Boot splash: Matrix-style intro animation
 - Touch suppression: avoids click-leak between screens
