@@ -112,9 +112,9 @@ Edit `include/config.h` before first flash:
 #define VPN_INTERFACE "wg0"
 
 #define OWM_API_KEY "your_openweathermap_key"
-#define OWM_LAT     "-37.7333"
-#define OWM_LON     "145.2167"
-#define OWM_LABEL   "Warrandyte, AU"
+#define OWM_LAT     "-10.0000"
+#define OWM_LON     "100.0000"
+#define OWM_LABEL   "City, Country"
 
 #define TZ_POSIX    "AEST-10AEDT,M10.1.0,M4.1.0/3"
 #define NTP_SERVER  "pool.ntp.org"
