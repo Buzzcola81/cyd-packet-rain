@@ -17,6 +17,22 @@ Requires Chrome or Edge on desktop with the board connected via USB.
 
 ---
 
+## Screenshots
+
+Some screenshots of the CYD in operation.
+
+<a href="docs/images/cyd-packet-rain-1.jpg">
+	<img src="docs/images/cyd-packet-rain-1.jpg" alt="CYD Packet Rain Screenshot 1" width="200" />
+</a>
+<a href="docs/images/cyd-packet-rain-2.jpg">
+	<img src="docs/images/cyd-packet-rain-2.jpg" alt="CYD Packet Rain Screenshot 2" width="200" />
+</a>
+<a href="docs/images/cyd-packet-rain-3.jpg">
+	<img src="docs/images/cyd-packet-rain-3.jpg" alt="CYD Packet Rain Screenshot 3" width="200" />
+</a>
+
+---
+
 ## Features
 
 - VPN dashboard: status badge, VPN/public IP, geo-location, RX/TX, uptime, enable/disable toggle (OpenWrt ubus JSON-RPC)
